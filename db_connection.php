@@ -11,20 +11,23 @@ try {
     //confuguracion del modo de errores de PDO a exepcion
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    //mostrar mesaje de conexion existosa
-    echo "conectado:";
-
-    //consulta de prueba
+    //consulta de prueba para verificar la conexion y obtenr tablas
     $query = $conn->query("SHOW TABLES");
-    $tablas = $query->fetchAll(PDO::FETCH_ASSOC);
+    $table = $query->fetchAll(PDO::FETCH_ASSOC);
 
-    //mostrar las tablas encronteadds
-    echo "tablas encotrardas";
-    foreach ($tablas as $table) {
-        echo implode(", ", $tablas) . "<br>";
-    }
-
+    //mostrar mesaje de conexion existosa
+    $response = [
+        "estatus" => "success",
+        "message" => "Conexion exitisa y tablas encontradas",
+        "tables" => $table
+    ];
 } catch(PDOException $e) {
     //si hay un error en la conexion, mostar el mensaje del error
-    echo "Error en la conexion: " . $e->getMessage();
+    $response = [
+        "status" => "error",
+        "message" => "Error al conexion: " . $e->getMessage()
+    ];
+
+    echo json_encode($response);
+    exit();
 }
